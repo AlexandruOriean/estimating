@@ -1,0 +1,63 @@
+name: Deploy to Hostinger
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build application
+      run: npm run build
+      env:
+        CI: true
+
+    - name: Create deployment package
+      run: |
+        mkdir -p dist
+        cp -r .next dist/
+        cp -r node_modules dist/
+        cp -r public dist/
+        cp package.json dist/
+        cp server.js dist/
+        cp next.config.ts dist/
+
+    - name: Deploy to Hostinger via FTP
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      with:
+        server: ${{ secrets.HOSTINGER_FTP_SERVER }}
+        username: ${{ secrets.HOSTINGER_FTP_USERNAME }}
+        password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
+        local-dir: ./dist/
+        server-dir: ./
+        exclude: |
+          **/.git*
+          **/.git*/**
+          **/node_modules/**
+          **/.next/cache/**
+
+    - name: SSH - Restart Application
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.HOSTINGER_SSH_HOST }}
+        username: ${{ secrets.HOSTINGER_SSH_USERNAME }}
+        password: ${{ secrets.HOSTINGER_SSH_PASSWORD }}
+        port: ${{ secrets.HOSTINGER_SSH_PORT || 22 }}
+        script: |
+          cd ~/htdocs
+          pm2 restart story-poker || pm2 start server.js --name story-poker

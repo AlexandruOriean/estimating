@@ -1,33 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Story Poker - Agile Estimation Tool
+
+A real-time story estimation app for Scrum teams, built with Next.js, TypeScript, and Socket.io.
+
+## Features
+
+- ✨ Create or join estimation rooms
+- 🎯 Real-time voting with Fibonacci scale (1, 2, 3, 5, 8, 13, 21)
+- 👥 Live participant tracking
+- 🎉 Simultaneous card reveal
+- 📊 Automatic average calculation
+- 📱 Fully responsive (mobile & desktop)
+- 🔗 Shareable room links
+
+## Tech Stack
+
+- **Frontend**: Next.js 15, React 19, TypeScript
+- **Styling**: Tailwind CSS
+- **Real-time**: Socket.io with custom Node.js server
+- **State Management**: Zustand
 
 ## Getting Started
 
-First, run the development server:
+1. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+2. **Run the development server**:
+   ```bash
+   npm run dev
+   ```
+
+3. **Open** [http://localhost:3000](http://localhost:3000)
+
+The app uses a custom Node.js server to properly integrate Socket.io with Next.js.
+
+## Production Deployment
+
+For production:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run build
+npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## How to Use
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Create a Room**: Enter your name and optionally a room name, then click "Create Room"
+2. **Share the Link**: Copy the room link and share it with your team
+3. **Join**: Team members can join using the room ID
+4. **Vote**: Select your estimate from the Fibonacci scale
+5. **Reveal**: Once everyone has voted, click "Reveal Votes" to see all estimates
+6. **New Round**: Click "New Round" to reset for the next story
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project Structure
 
-## Learn More
+```
+/app
+  /api/socket      # Socket.io server endpoint
+  /room/[room]     # Room page
+  page.tsx         # Home page
+/lib
+  socket.ts        # Socket.io client
+  store.ts         # Zustand store
+/types
+  index.ts         # TypeScript types
+```
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
 ## Deploy on Vercel
 
